@@ -27,18 +27,18 @@ public abstract class AbstractRPCClient implements UntypedRPCClient {
 
     /**
      * Subclasses must implement this method to actually send the request
-     * @param request The request to send
+     *
+     * @param request      The request to send
      * @param responseType The response to expected (used by Jackson for conversion)
-     * @param pass:[<R>] Type of result object
      * @return A JSON RPC Response with `result` of type `R`
-     * @throws IOException network error
+     * @throws IOException            network error
      * @throws JsonRPCStatusException JSON RPC status error
      */
     protected abstract <R> JsonRpcResponse<R> send(JsonRpcRequest request, JavaType responseType) throws IOException, JsonRPCStatusException;
 
     /**
      * Create a JsonRpcRequest from method and parameters
-     *
+     * <p>
      * Currently builds JSON-RPC 1.0 request, this method can be overridden for clients
      * that need JSON-RPC 2.0 (e.g. Ethereum)
      *
@@ -75,18 +75,25 @@ public abstract class AbstractRPCClient implements UntypedRPCClient {
     /**
      * JSON-RPC remote method call that returns 'response.result`
      *
-     * @param method JSON RPC method call to send
-     * @param params JSON RPC params
-     * @param pass:[<R>] Type of result object
+     * @param method     JSON RPC method call to send
+     * @param params     JSON RPC params
      * @param resultType desired result type as a Java class object
      * @return the 'response.result' field of the JSON RPC response converted to type R
      */
     protected <R> R send(String method, Class<R> resultType, List<Object> params) throws IOException, JsonRPCStatusException {
         // Construct a JavaType object so we can tell Jackson what type of result we are expecting.
         // (We can't use R because of type erasure)
+//        JavaType responseType = mapper.getTypeFactory().
+//                constructParametricType(JsonRpcResponse.class, JsonRpcResponse.class, resultType);
+//        return sendForResult(method, responseType, params);
+
+
+//        fixed:java.lang.IllegalArgumentException: Cannot create TypeBindings for class org.consensusj.jsonrpc.JsonRpcResponse with 2 type parameters: class expects 1
+        JsonRpcRequest request = new JsonRpcRequest(method, params);
         JavaType responseType = mapper.getTypeFactory().
-                constructParametricType(JsonRpcResponse.class, JsonRpcResponse.class, resultType);
-        return sendForResult(method, responseType, params);
+                constructParametrizedType(JsonRpcResponse.class, JsonRpcResponse.class, resultType);
+        JsonRpcResponse<R> response = send(request, responseType);
+        return response.getResult();
     }
 
     /**
@@ -100,9 +107,8 @@ public abstract class AbstractRPCClient implements UntypedRPCClient {
     /**
      * JSON-RPC remote method call that returns 'response.result`
      *
-     * @param pass:[<R>] Type of result object
-     * @param method JSON RPC method call to send
-     * @param params JSON RPC params
+     * @param method     JSON RPC method call to send
+     * @param params     JSON RPC params
      * @param resultType desired result type as a Jackson JavaType object
      * @return the 'response.result' field of the JSON RPC response converted to type R
      */
@@ -123,9 +129,9 @@ public abstract class AbstractRPCClient implements UntypedRPCClient {
 
     /**
      * Call an RPC method and return default object type.
-     *
+     * <p>
      * Caller should cast returned object to the correct type.
-     *
+     * <p>
      * Useful for:
      * * Dynamically-dispatched JSON-RPC methods calls via Groovy subclasses
      * * Simple (not client-side validated) command line utilities
@@ -133,9 +139,8 @@ public abstract class AbstractRPCClient implements UntypedRPCClient {
      *
      * @param method JSON RPC method call to send
      * @param params JSON RPC parameters as a `List`
-     * @param pass:[<R>] Type of result object
      * @return the 'response.result' field of the JSON RPC response cast to type R
-     * @throws IOException network error
+     * @throws IOException            network error
      * @throws JsonRPCStatusException JSON RPC status error
      */
     @Override
@@ -145,14 +150,13 @@ public abstract class AbstractRPCClient implements UntypedRPCClient {
 
     /**
      * Call an RPC method and return default object type.
-     *
+     * <p>
      * Convenience version that takes `params` as array/varargs.
      *
      * @param method JSON RPC method call to send
      * @param params JSON RPC parameters as array or varargs
-     * @param pass:[<R>] Type of result object
      * @return the 'response.result' field of the JSON RPC response cast to type R
-     * @throws IOException network error
+     * @throws IOException            network error
      * @throws JsonRPCStatusException JSON RPC status error
      */
     public <R> R send(String method, Object... params) throws IOException, JsonRPCStatusException {
