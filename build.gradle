@@ -96,6 +96,25 @@ apply from: 'gradle/asciidoctor.gradle'
 apply from: 'gradle/github-pages.gradle'
 apply from: 'gradle/bintray.gradle'
 
+group = 'com.msgilligan.bitcoinj'
+// artifactId is taken by default, from folder name
+version = '0.2.7-SNAPSHOT'
+
+task writeNewPom << {
+    pom {
+        project {
+            inceptionYear '2018'
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+        }
+    }.writeTo("pom.xml")
+}
+
 task testReport(type: TestReport) {
     destinationDir = file("$buildDir/reports/allTests")
     // Include the results from the `test` task in all subprojects

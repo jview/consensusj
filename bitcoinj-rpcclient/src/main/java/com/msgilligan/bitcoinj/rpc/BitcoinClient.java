@@ -3,20 +3,8 @@ package com.msgilligan.bitcoinj.rpc;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.msgilligan.bitcoinj.json.conversion.HexUtil;
-import com.msgilligan.bitcoinj.json.pojo.AddressGroupingItem;
-import com.msgilligan.bitcoinj.json.pojo.BlockChainInfo;
-import com.msgilligan.bitcoinj.json.pojo.BlockInfo;
-import com.msgilligan.bitcoinj.json.pojo.ChainTip;
-import com.msgilligan.bitcoinj.json.pojo.NetworkInfo;
-import com.msgilligan.bitcoinj.json.pojo.Outpoint;
-import com.msgilligan.bitcoinj.json.pojo.RawTransactionInfo;
-import com.msgilligan.bitcoinj.json.pojo.ReceivedByAddressInfo;
-import com.msgilligan.bitcoinj.json.pojo.ServerInfo;
-import com.msgilligan.bitcoinj.json.pojo.SignedRawTransaction;
-import com.msgilligan.bitcoinj.json.pojo.TxOutInfo;
-import com.msgilligan.bitcoinj.json.pojo.UnspentOutput;
+import com.msgilligan.bitcoinj.json.pojo.*;
 import com.msgilligan.bitcoinj.json.conversion.RpcClientModule;
-import com.msgilligan.bitcoinj.json.pojo.WalletTransactionInfo;
 import org.consensusj.jsonrpc.JsonRPCException;
 import org.consensusj.jsonrpc.JsonRPCStatusException;
 import org.consensusj.jsonrpc.RPCClient;
@@ -618,6 +606,10 @@ public class BitcoinClient extends RPCClient implements NetworkParametersPropert
         return send("gettxout", TxOutInfo.class, txid, vout, includeMemoryPool);
     }
 
+    public Coin getUnconfirmedBalance() throws JsonRPCStatusException, IOException {
+        return send("getunconfirmedbalance", Coin.class);
+    }
+
     /**
      * Get the balance for a the default Bitcoin "account"
      *
@@ -724,6 +716,10 @@ public class BitcoinClient extends RPCClient implements NetworkParametersPropert
         return send("getnetworkinfo", NetworkInfo.class);
     }
 
+    public WalletInfo getWalletinfo() throws JsonRPCStatusException, IOException {
+        return send("getwalletinfo", WalletInfo.class);
+    }
+
     /**
      * Returns list of related addresses
      * Also useful for finding all change addresses in the wallet
@@ -744,6 +740,12 @@ public class BitcoinClient extends RPCClient implements NetworkParametersPropert
             result.add(grouping);
         }
         return result;
+    }
+
+    public Map listAccounts() throws JsonRPCStatusException, IOException {
+        // TODO: I'm not sure how to make Jackson mapping work automatically here.
+        Map raw = send("listaccounts", Map.class);
+        return raw;
     }
 
     /**

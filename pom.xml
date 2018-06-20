@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.msgilligan</groupId>
+    <artifactId>consensusj</artifactId>
+    <version>0.2.7-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <inceptionYear>2018</inceptionYear>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <properties>
+        <bitcoinj-rpcclient.version>0.2.7-SNAPSHOT</bitcoinj-rpcclient.version>
+        <bitcoinj-json.version>0.2.7-SNAPSHOT</bitcoinj-json.version>
+        <bitcoinj-cli.version>0.2.7-SNAPSHOT</bitcoinj-cli.version>
+        <bitcoinj-money.version>0.2.7-SNAPSHOT</bitcoinj-money.version>
+        <bitcoinj-dsl.version>0.2.7-SNAPSHOT</bitcoinj-dsl.version>
+    </properties>
+
+    <modules>
+        <module>bitcoinj-rpcclient</module>
+        <module>bitcoinj-json</module>
+        <module>bitcoinj-cli</module>
+        <module>bitcoinj-money</module>
+        <module>bitcoinj-dsl</module>
+    </modules>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.msgilligan</groupId>
+                <artifactId>bitcoinj-rpcclient</artifactId>
+                <version>${bitcoinj-rpcclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.msgilligan</groupId>
+                <artifactId>bitcoinj-json</artifactId>
+                <version>${bitcoinj-json.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.msgilligan</groupId>
+                <artifactId>bitcoinj-cli</artifactId>
+                <version>${bitcoinj-cli.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.msgilligan</groupId>
+                <artifactId>bitcoinj-money</artifactId>
+                <version>${bitcoinj-money.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.msgilligan</groupId>
+                <artifactId>bitcoinj-dsl</artifactId>
+                <version>${bitcoinj-dsl.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <uniqueVersion>true</uniqueVersion>
+            <name>Internal Release Repository</name>
+            <url>http://builder.jview.cn:8081/repository/maven-releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <uniqueVersion>true</uniqueVersion>
+            <name>Internal Snapshot Repository</name>
+            <url>http://builder.jview.cn:8081/repository/maven-snapshots</url>
+        </snapshotRepository>
+
+        <!--
+        <repository>
+            <id>releases</id>
+            <uniqueVersion>true</uniqueVersion>
+            <name>Internal Release Repository</name>
+            <url>http://builder.jview.cn:8081/nexus/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <uniqueVersion>true</uniqueVersion>
+            <name>Internal Snapshot Repository</name>
+            <url>http://builder.jview.cn:8081/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+        -->
+    </distributionManagement>
+</project>

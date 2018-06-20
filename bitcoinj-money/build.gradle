@@ -1,5 +1,26 @@
 def xChangeVersion = '4.3.7'
 
+
+group = 'com.msgilligan.bitcoinj'
+// artifactId is taken by default, from folder name
+version = '0.2.7-SNAPSHOT'
+
+task writeNewPom << {
+    pom {
+        project {
+            inceptionYear '2018'
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+        }
+    }.writeTo("pom.xml")
+}
+
+
 dependencies {
     compile 'org.javamoney:moneta:1.2.1'
 
