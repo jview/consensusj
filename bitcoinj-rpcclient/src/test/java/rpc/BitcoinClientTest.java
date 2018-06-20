@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+
 public class BitcoinClientTest {
     private static BitcoinClient client;
 
